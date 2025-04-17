@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -33,6 +34,7 @@ namespace myapp.Controllers
             return Ok(service);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Service updatedService)
         {
@@ -53,6 +55,7 @@ namespace myapp.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -60,6 +63,21 @@ namespace myapp.Controllers
             if (service == null) return NotFound();
             _services.Remove(service);
             return NoContent();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult<Service> Post(Service newService)
+        {
+            if (newService == null)
+            {
+                return BadRequest("Service data is required.");
+            }
+
+            newService.Id = _services.Max(s => s.Id) + 1;
+            _services.Add(newService);
+
+            return CreatedAtAction(nameof(GetById), new { id = newService.Id }, newService);
         }
     }
 }

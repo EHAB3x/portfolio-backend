@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +25,12 @@ namespace myapp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<Skill> Post(Skill skill)
         {
             if (skill == null)
             {
+
                 return BadRequest("Skill data is invalid.");
             }
 
@@ -37,11 +40,11 @@ namespace myapp.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public IActionResult Put(int id, Skill skill)
         {
-            var existingSkill = _skills.FirstOrDefault(s => s.order == id);
+            var existingSkill = _skills.FirstOrDefault(s => s.Id == id);
             if (existingSkill == null)
-
             {
                 return NotFound();
             }
@@ -49,7 +52,9 @@ namespace myapp.Controllers
                 existingSkill.level = skill.level;
             return NoContent();
         }
+
          [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult Delete(int id)
         {
             var skill = _skills.FirstOrDefault(e => e.Id == id);

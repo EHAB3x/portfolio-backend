@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace myapp.Controllers
             return Ok(education);
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult<Education> Post([FromBody] Education newEducation)
         {
@@ -50,6 +52,7 @@ namespace myapp.Controllers
             return CreatedAtAction(nameof(GetById), new { id = newEducation.Id }, newEducation);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Education updatedEducation)
         {
@@ -74,6 +77,7 @@ namespace myapp.Controllers
             return NoContent(); // Indicates success, but no content to return
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

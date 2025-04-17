@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using Models;
@@ -33,6 +34,7 @@ namespace myapp.Controllers
             return Ok(experience);
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult<Experience> Post([FromBody] Experience newExperience)
         {
@@ -46,6 +48,7 @@ namespace myapp.Controllers
             return CreatedAtAction(nameof(GetById), new { id = newExperience.Id }, newExperience);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Experience updatedExperience)
         {
@@ -69,6 +72,7 @@ namespace myapp.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

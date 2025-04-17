@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using Models;
@@ -33,6 +34,7 @@ namespace myapp.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<Project> Post([FromBody] Project newProject)
         {
             if (newProject == null)
@@ -46,6 +48,7 @@ namespace myapp.Controllers
             return CreatedAtAction(nameof(GetById), new { id = newProject.Id }, newProject);
         }
         [HttpPut("{id}")]
+        [Authorize]
         public IActionResult Put(int id, [FromBody] Project updatedProject)
         {
             if (updatedProject == null || id != updatedProject.Id)
@@ -67,6 +70,7 @@ namespace myapp.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public IActionResult Delete(int id)
         {
             var project = _projects.FirstOrDefault(p => p.Id == id);
