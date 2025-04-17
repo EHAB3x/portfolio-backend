@@ -21,12 +21,12 @@ namespace myapp.Controllers
         {
             if (model.Username == _configuration["AdminCredentials:Username"] && model.Password == _configuration["AdminCredentials:Password"])
             {
-                var token = _tokenService.CreateToken(model.Username);
-                return Ok(new { token });
+                var token = _tokenService.CreateToken(model.Username);               
+                return Ok(new { message = "Login successful", token = token });
             }
             else
             {
-                return Unauthorized();
+                return Unauthorized(new { message = "Wrong user data" });
             }
         }
     }
