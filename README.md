@@ -1,10 +1,16 @@
-# .NET API Service Starter
+# Portfolio API - .NET Core
 
-This is a minimal .NET API service starter based on [Google Cloud Run Quickstart](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-dotnet-service).
+This project is a RESTful API built with .NET Core, designed to manage data for a personal portfolio. It includes functionalities to create, read, update, and delete data related to projects, skills, services, education, and experience.
 
-## Getting Started
+## Technologies Used
 
-Server should run automatically when starting a workspace. To run manually, run:
+*   **Backend:** .NET Core 8
+*   **Language:** C#
+* **Architecture**: RESTful API
+
+## Folder Structure
+
+
 ```sh
 dotnet watch --urls=http://localhost:3000
 ```
