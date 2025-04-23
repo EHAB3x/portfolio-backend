@@ -7,6 +7,5 @@ namespace Models
         public int Id {get; set;}
         public string level { get; set; }
         public string name { get; set; }
-        public int order { get; set; }
     }
 }
