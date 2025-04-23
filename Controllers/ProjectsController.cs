@@ -17,6 +17,12 @@ namespace myapp.Controllers
 
         };
 
+        [HttpGet]
+        public ActionResult<IEnumerable<Service>> Get()
+        {
+            return Ok(_projects);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Project> GetById(int id)
         {

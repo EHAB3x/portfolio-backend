@@ -18,6 +18,12 @@ namespace myapp.Controllers
         };
         private static int _nextId = 3; // Keep track of the next available ID
 
+        [HttpGet]
+        public ActionResult<IEnumerable<Service>> Get()
+        {
+            return Ok(_educations);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Education> GetById(int id)
         {

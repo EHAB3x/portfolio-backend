@@ -17,6 +17,12 @@ namespace myapp.Controllers
         };
         private static int _nextId = 3;
 
+        [HttpGet]
+        public ActionResult<IEnumerable<Service>> Get()
+        {
+            return Ok(_experiences);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Experience> GetById(int id)
         {
