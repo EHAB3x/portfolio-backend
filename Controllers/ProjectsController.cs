@@ -12,16 +12,11 @@ namespace myapp.Controllers
     {   private static int _nextId = 3;
         private static List<Project> _projects = new List<Project>()
         {
-            new Project {Id = 1, category = "Web Development", img = "project1.jpg", order = 1, link = "https://example.com/project1", title = "Portfolio Website" },    
-            new Project {Id = 2, category = "Mobile App", img = "project2.png", order = 2, link = "https://example.com/project2", title = "Task Manager App" }
+            new Project {Id = 1, category = "Web Development", img = "project1.jpg", link = "https://example.com/project1", title = "Portfolio Website" },    
+            new Project {Id = 2, category = "Mobile App", img = "project2.png", link = "https://example.com/project2", title = "Task Manager App" }
 
         };
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Project>> Get()
-        {
-            return Ok(_projects.OrderBy(p => p.order).ToList());
-        }
         [HttpGet("{id}")]
         public ActionResult<Project> GetById(int id)
         {
@@ -64,7 +59,6 @@ namespace myapp.Controllers
             project.category = updatedProject.category;
             project.img = updatedProject.img;
             project.link = updatedProject.link;
-            project.order = updatedProject.order;
             project.title = updatedProject.title;
             return NoContent();
         }

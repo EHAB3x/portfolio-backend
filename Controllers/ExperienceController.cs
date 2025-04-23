@@ -12,16 +12,10 @@ namespace myapp.Controllers
     {
         private static List<Experience> _experiences = new List<Experience>()
         {
-            new Experience { Id = 1, country = "USA", date = "2022-Present", order = 1, place = "Tech Company A", title = "Software Engineer" },
-            new Experience { Id = 2, country = "USA", date = "2021-2022", order = 2, place = "Startup B", title = "Junior Developer" }
+            new Experience { Id = 1, country = "USA", date = "2022-Present", place = "Tech Company A", title = "Software Engineer" },
+            new Experience { Id = 2, country = "USA", date = "2021-2022", place = "Startup B", title = "Junior Developer" }
         };
         private static int _nextId = 3;
-
-        [HttpGet]
-        public ActionResult<IEnumerable<Experience>> Get()
-        {
-            return Ok(_experiences.OrderBy(e => e.order).ToList());
-        }
 
         [HttpGet("{id}")]
         public ActionResult<Experience> GetById(int id)
@@ -65,7 +59,6 @@ namespace myapp.Controllers
 
             experience.country = updatedExperience.country;
             experience.date = updatedExperience.date;
-            experience.order = updatedExperience.order;
             experience.place = updatedExperience.place;
             experience.title = updatedExperience.title;
 
