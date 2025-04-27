@@ -12,9 +12,9 @@ namespace myapp.Controllers
     {
         private static List<Skill> _skills = new List<Skill>()
         {
-            new Skill { Id=1,level = "Advanced", name = "C#", order = 1 },
-            new Skill {Id=2, level = "Intermediate", name = "React", order = 2 },
-            new Skill {Id=3, level = "Beginner", name = "Python", order = 3 }
+            new Skill { Id=1,level = "Advanced", name = "C#" },
+            new Skill {Id=2, level = "Intermediate", name = "React" },
+            new Skill {Id=3, level = "Beginner", name = "Python" }
         };
         private static int _nextId = 4;
 

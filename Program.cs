@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using myapp.Services;
 using Swashbuckle.AspNetCore;
+using myapp.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,14 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<TokenService>();
+
+builder.Services.AddTransient<EducationController>();
+builder.Services.AddTransient<ExperienceController>();
+builder.Services.AddTransient<ProjectsController>();
+builder.Services.AddTransient<ServicesController>();
+builder.Services.AddTransient<SkillsController>();
+
+
 
 var app = builder.Build();
 

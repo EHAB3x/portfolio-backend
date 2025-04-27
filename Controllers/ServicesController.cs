@@ -13,8 +13,8 @@ namespace myapp.Controllers
     {
         private static readonly List<Service> _services = new List<Service>()
         {
-            new Service { Id = 1, description = "Building responsive websites.", features = new[] { "Frontend", "Backend" }, order = 1, icon = "web_icon.png", title = "Web Development" },
-            new Service { Id = 2, description = "Creating mobile applications.", features = new[] { "iOS", "Android" }, order = 2, icon = "mobile_icon.png", title = "Mobile App Development" }
+            new Service { Id = 1, description = "Building responsive websites.", features = new[] { "Frontend", "Backend" }, icon = "web_icon.png", title = "Web Development" },
+            new Service { Id = 2, description = "Creating mobile applications.", features = new[] { "iOS", "Android" }, icon = "mobile_icon.png", title = "Mobile App Development" }
         };
 
         [HttpGet]

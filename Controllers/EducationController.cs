@@ -13,15 +13,15 @@ namespace myapp.Controllers
         private static List<Education> _educations = new List<Education>()
         {
             // Initialize with Id instead of order as key
-            new Education { Id = 1, country = "USA", date = "2020-2024", order = 1, place = "State University", title = "B.Sc. Computer Science" },
-            new Education { Id = 2, country = "USA", date = "2018-2020", order = 2, place = "Community College", title = "Associate of Arts" }
+            new Education { Id = 1, country = "USA", date = "2020-2024", place = "State University", title = "B.Sc. Computer Science" },
+            new Education { Id = 2, country = "USA", date = "2018-2020", place = "Community College", title = "Associate of Arts" }
         };
         private static int _nextId = 3; // Keep track of the next available ID
 
         [HttpGet]
-        public ActionResult<IEnumerable<Education>> Get()
+        public ActionResult<IEnumerable<Service>> Get()
         {
-            return Ok(_educations.OrderBy(e => e.order).ToList()); // Order by 'order' field
+            return Ok(_educations);
         }
 
         [HttpGet("{id}")]
@@ -70,7 +70,6 @@ namespace myapp.Controllers
             // Update the existing education record
             education.country = updatedEducation.country;
             education.date = updatedEducation.date;
-            education.order = updatedEducation.order;
             education.place = updatedEducation.place;
             education.title = updatedEducation.title;
 
