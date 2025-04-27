@@ -6,9 +6,18 @@ using Swashbuckle.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ? Add CORS service
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularClient", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
-// Configure JWT authentication
+// ? JWT Auth
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -21,19 +30,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = "your_issuer",
             ValidAudience = "your_audience",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_very_long_and_secure_secret_key"))
-
         };
         options.Events = new JwtBearerEvents
         {
-            OnChallenge = context => {
-                return Task.CompletedTask;
-            }
+            OnChallenge = context => Task.CompletedTask
         };
     });
 
-builder.Services.AddControllers(); // Add this line to register controllers
-
-// Add authorization
+builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,28 +45,23 @@ builder.Services.AddScoped<TokenService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ? Use CORS before everything else
+app.UseCors("AllowAngularClient");
 
 app.UseAuthentication();
-// Always use Swagger/SwaggerUI for development
+app.UseAuthorization();
+
+// ? Swagger (only for dev)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        // Optional: Set the Swagger UI endpoint to the root
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty; // Set Swagger UI at apps root
+        c.RoutePrefix = string.Empty;
     });
 }
 
-app.UseAuthorization();
+app.MapControllers();
 
-// Remove or comment out the original MapGet if they conflict or are not needed
-// app.MapGet("/hello", () => "Hello World");
-// var target = Environment.GetEnvironmentVariable("TARGET") ?? "World";
-// app.MapGet("/", () => $"Hello {target}!");
-
-app.MapControllers(); // Add this line to map controller routes
-
-app.Run(); // Remove the explicit URL parameter
+app.Run();
