@@ -18,6 +18,7 @@ namespace myapp.Controllers
         };
         private static int _nextId = 3; // Keep track of the next available ID
 
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<Service>> Get()
         {

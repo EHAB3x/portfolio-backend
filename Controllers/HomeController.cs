@@ -37,35 +37,35 @@ namespace myapp.Controllers
                 {
                     Title = "Education",
                     Description = "View my educational background and qualifications.",
-                    Link = "api/Education",
+                    Link = "education",
                     Length = educationList.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Experience",
                     Description = "Explore my professional experience and work history.",
-                    Link = "api/Experience",
+                    Link = "experience",
                     Length = experienceList.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Projects",
                     Description = "Discover the various projects I have worked on.",
-                    Link = "api/Projects",
+                    Link = "projects",
                     Length = projectList.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Services",
                     Description = "Learn about the services I offer.",
-                    Link = "api/Services",
+                    Link = "services",
                     Length = serviceList.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Skills",
                     Description = "See the list of my skills and competencies.",
-                    Link = "api/Skills",
+                    Link = "skills",
                     Length = skillList.Count()
                 },
             };
