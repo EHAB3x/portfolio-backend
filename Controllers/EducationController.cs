@@ -8,6 +8,7 @@ namespace myapp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EducationController : ControllerBase
     {
         private static List<Education> _educations = new List<Education>()
@@ -36,7 +37,6 @@ namespace myapp.Controllers
             return Ok(education);
         }
 
-        [Authorize]
         [HttpPost]
         public ActionResult<Education> Post([FromBody] Education newEducation)
         {
@@ -53,7 +53,6 @@ namespace myapp.Controllers
             return CreatedAtAction(nameof(GetById), new { id = newEducation.Id }, newEducation);
         }
 
-        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Education updatedEducation)
         {
@@ -77,7 +76,6 @@ namespace myapp.Controllers
             return NoContent(); // Indicates success, but no content to return
         }
 
-        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
