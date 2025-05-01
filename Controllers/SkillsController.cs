@@ -1,69 +1,78 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using Models;
+using myapp.Models;
+using System.Threading.Tasks;
 
 namespace myapp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class SkillsController : ControllerBase
-    {
-        private static List<Skill> _skills = new List<Skill>()
+    {        
+         private readonly DataContext _context;
+
+        public SkillsController(DataContext context)
         {
-            new Skill { Id=1,level = "Advanced", name = "C#" },
-            new Skill {Id=2, level = "Intermediate", name = "React" },
-            new Skill {Id=3, level = "Beginner", name = "Python" }
-        };
-        private static int _nextId = 4;
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Skill>> Get()
+        public async Task<ActionResult<IEnumerable<Skill>>> Get()
         {
-            return Ok(_skills);
+            return await _context.Skills.ToListAsync();
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Skill>> GetById(int id)
+        {
+            var skill = await _context.Skills.FindAsync(id);
+
+            if (skill == null)
+            {
+                return NotFound();
+            }
+
+            return skill;
+        }
+
 
         [HttpPost]
-        [Authorize]
-        public ActionResult<Skill> Post(Skill skill)
+       
+        public async Task<ActionResult<Skill>> Post(Skill skill)
         {
             if (skill == null)
             {
-
                 return BadRequest("Skill data is invalid.");
             }
+            _context.Skills.Add(skill);
+            await _context.SaveChangesAsync();
 
-            skill.Id = _nextId++;
-            _skills.Add(skill);
-            return CreatedAtAction(nameof(Get), new { id = skill.Id }, skill);
+            return CreatedAtAction(nameof(GetById), new { id = skill.Id }, skill);
         }
 
-        [HttpPut("{id}")]
-        [Authorize]
-        public IActionResult Put(int id, Skill skill)
+
+       [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, Skill skill)
         {
-            var existingSkill = _skills.FirstOrDefault(s => s.Id == id);
-            if (existingSkill == null)
+             if (id != skill.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
-            existingSkill.name = skill.name;
-                existingSkill.level = skill.level;
-            return NoContent();
-        }
 
-         [HttpDelete("{id}")]
-        [Authorize]
-        public IActionResult Delete(int id)
-        {
-            var skill = _skills.FirstOrDefault(e => e.Id == id);
-            if (skill == null)
+            _context.Entry(skill).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
             {
                 return NotFound();
             }
 
-            _skills.Remove(skill);
             return NoContent();
         }
     }

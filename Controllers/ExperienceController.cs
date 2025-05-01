@@ -1,88 +1,90 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Models;
+using myapp.Models;
+using System.Threading.Tasks;
 
 namespace myapp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class ExperienceController : ControllerBase
-    {
-        private static List<Experience> _experiences = new List<Experience>()
+    {        
+         private readonly DataContext _context;
+
+        public ExperienceController(DataContext context)
         {
-            new Experience { Id = 1, country = "USA", date = "2022-Present", place = "Tech Company A", title = "Software Engineer" },
-            new Experience { Id = 2, country = "USA", date = "2021-2022", place = "Startup B", title = "Junior Developer" }
-        };
-        private static int _nextId = 3;
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Service>> Get()
+        public async Task<ActionResult<List<Experience>>> Get()
         {
-            return Ok(_experiences);
+            return await _context.Experiences.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Experience> GetById(int id)
+        public async Task<ActionResult<Experience>> GetById(int id)
         {
-            var experience = _experiences.FirstOrDefault(e => e.Id == id);
+            var experience = await _context.Experiences.FindAsync(id);
+
             if (experience == null)
             {
                 return NotFound();
             }
+
             return Ok(experience);
         }
 
         [Authorize]
         [HttpPost]
-        public ActionResult<Experience> Post([FromBody] Experience newExperience)
+        public async Task<ActionResult<Experience>> Post([FromBody] Experience newExperience)
         {
             if (newExperience == null)
             {
                 return BadRequest("Experience data is required.");
             }
 
-            newExperience.Id = _nextId++;
-            _experiences.Add(newExperience);
+            _context.Experiences.Add(newExperience);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = newExperience.Id }, newExperience);
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Experience updatedExperience)
+        [HttpPut("{id}")]        
+        public async Task<IActionResult> Put(int id, [FromBody] Experience updatedExperience)
         {
             if (updatedExperience == null || id != updatedExperience.Id)
             {
                 return BadRequest("Experience data is invalid.");
             }
-
-            var experience = _experiences.FirstOrDefault(e => e.Id == id);
+             var experience = await _context.Experiences.FindAsync(id);
             if (experience == null)
-            {
                 return NotFound();
-            }
 
-            experience.country = updatedExperience.country;
-            experience.date = updatedExperience.date;
-            experience.place = updatedExperience.place;
-            experience.title = updatedExperience.title;
+           
+            _context.Entry(experience).CurrentValues.SetValues(updatedExperience);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         [Authorize]
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var experience = _experiences.FirstOrDefault(e => e.Id == id);
+             var experience = await _context.Experiences.FindAsync(id);
             if (experience == null)
             {
                 return NotFound();
             }
 
-            _experiences.Remove(experience);
+            _context.Experiences.Remove(experience);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }
 }
+
