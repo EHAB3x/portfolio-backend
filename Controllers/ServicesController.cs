@@ -1,82 +1,82 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
-using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using myapp.Models;
 using System.Linq;
-using Models;
 
 namespace myapp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ServicesController : ControllerBase
     {
-        private static readonly List<Service> _services = new List<Service>()
+        private readonly DataContext _context;
+
+        public ServicesController(DataContext context)
         {
-            new Service { Id = 1, description = "Building responsive websites.", features = new[] { "Frontend", "Backend" }, icon = "web_icon.png", title = "Web Development" },
-            new Service { Id = 2, description = "Creating mobile applications.", features = new[] { "iOS", "Android" }, icon = "mobile_icon.png", title = "Mobile App Development" }
-        };
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Service>> Get()
+        public IActionResult Get()
         {
-            return Ok(_services);
+            var services = _context.Services.ToList();
+            return Ok(services);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Service> GetById(int id)
+        public IActionResult GetById(int id)
         {
-            var service = _services.FirstOrDefault(s => s.Id == id);
-            if (service == null)
+            var service = _context.Services.Find(id);
+            if (service is null)
             {
                 return NotFound();
             }
             return Ok(service);
         }
 
-        [Authorize]
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Service updatedService)
+        public IActionResult Put(int id, Service updatedService)
         {
             if (updatedService == null || id != updatedService.Id)
             {
                 return BadRequest("Service data is invalid.");
             }
-            
-            var service = _services.FirstOrDefault(s => s.Id == id);
-            if (service == null)
+
+            if (_context.Services.Find(id) == null)
             {
                 return NotFound();
             }
-            service.description = updatedService.description;
-            service.features = updatedService.features;
-            service.icon = updatedService.icon;
-            service.title = updatedService.title;
+
+            _context.Entry(updatedService).State = EntityState.Modified;
+            _context.SaveChanges();
+
             return NoContent();
         }
 
-        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var service = _services.FirstOrDefault(s => s.Id == id);
-            if (service == null) return NotFound();
-            _services.Remove(service);
+            var service = _context.Services.Find(id);
+            if (service is null)
+            {
+                return NotFound();
+            }
+            _context.Services.Remove(service);
+            _context.SaveChanges();
             return NoContent();
         }
 
-        [Authorize]
         [HttpPost]
-        public ActionResult<Service> Post(Service newService)
+        public IActionResult Post(Service newService)
         {
-            if (newService == null)
+            if (newService is null)
             {
                 return BadRequest("Service data is required.");
             }
-
-            newService.Id = _services.Max(s => s.Id) + 1;
-            _services.Add(newService);
-
+            _context.Services.Add(newService);
+            _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new { id = newService.Id }, newService);
         }
     }

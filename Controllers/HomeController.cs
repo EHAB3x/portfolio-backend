@@ -1,71 +1,65 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using myapp.Models;
-using Models;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace myapp.Controllers
 {
     [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<HomePageCard>> Get()
+         private readonly DataContext _context;
+
+        public HomeController(DataContext context)
         {
-            var educationController = HttpContext.RequestServices.GetRequiredService<EducationController>();
-            var experienceController = HttpContext.RequestServices.GetRequiredService<ExperienceController>();
-            var projectsController = HttpContext.RequestServices.GetRequiredService<ProjectsController>();
-            var servicesController = HttpContext.RequestServices.GetRequiredService<ServicesController>();
-            var skillsController = HttpContext.RequestServices.GetRequiredService<SkillsController>();
+            _context = context;
+        }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<HomePageCard>>> Get()
+      {
+             var educations = await _context.Educations.ToListAsync();
+            var experiences = await _context.Experiences.ToListAsync();
+            var projects = await _context.Projects.ToListAsync();
+            var services = await _context.Services.ToListAsync();
+            var skills = await _context.Skills.ToListAsync();
 
-            var educations = educationController.Get();
-            var experiences = experienceController.Get();
-            var projects = projectsController.Get();
-            var services = servicesController.Get();
-            var skills = skillsController.Get();
-
-            List<Education> educationList = (educations.Result as OkObjectResult)?.Value as List<Education> ?? new List<Education>();
-            List<Experience> experienceList = (experiences.Result as OkObjectResult)?.Value as List<Experience> ?? new List<Experience>();
-            List<Project> projectList = (projects.Result as OkObjectResult)?.Value as List<Project> ?? new List<Project>();
-            List<Service> serviceList = (services.Result as OkObjectResult)?.Value as List<Service> ?? new List<Service>();
-            List<Skill> skillList = (skills.Result as OkObjectResult)?.Value as List<Skill> ?? new List<Skill>();
-
-
-
-
-            List<HomePageCard> cards = new List<HomePageCard>()
+            var cards = new List<HomePageCard>()
              {
                 new HomePageCard
                 {
                     Title = "Education",
-                    Description = "View my educational background and qualifications.",
-                    Link = "education",
-                    Length = educationList.Count()
+                    Description = "View my educational background and qualifications",
+                    Link = "api/Education",
+                    Length = educations.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Experience",
                     Description = "Explore my professional experience and work history.",
-                    Link = "experience",
+                    Link = "api/Experience",
                     Length = experienceList.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Projects",
                     Description = "Discover the various projects I have worked on.",
-                    Link = "projects",
+                    Link = "api/Projects",
                     Length = projectList.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Services",
                     Description = "Learn about the services I offer.",
-                    Link = "services",
+                    Link = "api/Services",
                     Length = serviceList.Count()
                 },
                 new HomePageCard
                 {
                     Title = "Skills",
                     Description = "See the list of my skills and competencies.",
-                    Link = "skills",
+                    Link = "api/Skills",
                     Length = skillList.Count()
                 },
             };
@@ -74,3 +68,4 @@ namespace myapp.Controllers
         }
     }
 }
+

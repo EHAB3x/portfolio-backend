@@ -14,14 +14,15 @@ namespace myapp.Services
             _configuration = configuration;
         }
 
-        public string CreateToken(string username)
+        public string CreateToken(string name, string type)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, username)
+                new Claim(JwtRegisteredClaimNames.NameId, name),
+                new Claim(ClaimTypes.Role, type)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
