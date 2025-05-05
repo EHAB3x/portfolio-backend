@@ -4,6 +4,7 @@ using myapp.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using myapp.Services;
+using myapp.Models;
 
 namespace myapp.Controllers
 {
@@ -24,13 +25,13 @@ namespace myapp.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] AdminModel model)
+        public async Task<IActionResult> Login([FromBody] Admin model)
         {            
             var admin = await _context.Admins.FirstOrDefaultAsync(a => a.Username == model.Username && a.Password == model.Password);
 
             if (admin != null)
             {
-                var token = _tokenService.CreateToken(admin.Username, admin.Type);
+                var token = _tokenService.CreateToken(admin.Username, admin.Password);
                 return Ok(new { message = "Login successful", token });
             }            
             else
@@ -38,11 +39,36 @@ namespace myapp.Controllers
                 return Unauthorized(new { message = "Please enter a vaild username or password" });
             }
         }
-    }
 
-    public class AdminModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; } 
+        //[Authorize]
+        [HttpGet("Admins")]
+        public async Task<ActionResult<IEnumerable<Admin>>> GetAllAdmins()
+        {
+            return await _context.Admins.ToListAsync();
+        }
+
+        //[Authorize]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult<Admin>> AddAdmin([FromBody] Admin admin)
+        {
+            if (admin == null)
+            {
+                return BadRequest("Admin data is invalid.");
+            }
+
+            var existingAdmin = await _context.Admins.FirstOrDefaultAsync(a => a.Username == admin.Username);
+
+            if (existingAdmin != null)
+            {
+                return Conflict(new { message = "An admin with the same username already exists." });
+            }
+
+            _context.Admins.Add(admin);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }
