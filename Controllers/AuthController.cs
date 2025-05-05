@@ -48,8 +48,7 @@ namespace myapp.Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        [AllowAnonymous]
+        [HttpPost("Admins")]
         public async Task<ActionResult<Admin>> AddAdmin([FromBody] Admin admin)
         {
             if (admin == null)
@@ -67,6 +66,20 @@ namespace myapp.Controllers
             _context.Admins.Add(admin);
             await _context.SaveChangesAsync();
 
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpDelete("Admins/{id}")]
+        public IActionResult DeleteAdmin(int id)
+        {
+            var admin = _context.Admins.Find(id);
+            if (admin is null)
+            {
+                return NotFound();
+            }
+            _context.Admins.Remove(admin);
+            _context.SaveChanges();
             return NoContent();
         }
 
