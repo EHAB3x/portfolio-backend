@@ -83,5 +83,19 @@ namespace myapp.Controllers
             return NoContent();
         }
 
+        [Authorize]
+        [HttpGet("Admins/{id}")]
+        public async Task<ActionResult<Admin>> GetById(int id)
+        {
+            var admin = await _context.Admins.FindAsync(id);
+
+            if (admin == null)
+            {
+                return NotFound();
+            }
+
+            return admin;
+        }
+
     }
 }
