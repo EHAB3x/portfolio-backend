@@ -19,12 +19,14 @@ namespace myapp.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> Get()
         {
             return _context.Projects.ToList();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Project> GetById(int id)
         {
@@ -35,8 +37,9 @@ namespace myapp.Controllers
             }
             return Ok(project);
         }
-        [HttpPost]
+
         [Authorize]
+        [HttpPost]
         public ActionResult<Project> Post([FromBody] Project newProject)
         {
             if (newProject == null) { return BadRequest("Project data is required."); }
@@ -46,8 +49,8 @@ namespace myapp.Controllers
         }
 
 
-        [HttpPut("{id}")]
         [Authorize]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Project updatedProject)
         {
             if (updatedProject == null || id != updatedProject.Id)
@@ -66,8 +69,8 @@ namespace myapp.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
         [Authorize]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
                 {
                     var project = _context.Projects.FirstOrDefault(p => p.Id == id);

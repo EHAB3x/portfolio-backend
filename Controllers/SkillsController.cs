@@ -19,12 +19,14 @@ namespace myapp.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Skill>>> Get()
         {
             return await _context.Skills.ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Skill>> GetById(int id)
         {
@@ -38,7 +40,7 @@ namespace myapp.Controllers
             return skill;
         }
 
-
+        [Authorize]
         [HttpPost]
        
         public async Task<ActionResult<Skill>> Post(Skill skill)
@@ -53,8 +55,22 @@ namespace myapp.Controllers
             return CreatedAtAction(nameof(GetById), new { id = skill.Id }, skill);
         }
 
+        [Authorize]
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var skill = _context.Skills.Find(id);
+            if (skill is null)
+            {
+                return NotFound();
+            }
+            _context.Skills.Remove(skill);
+            _context.SaveChanges();
+            return NoContent();
+        }
 
-       [HttpPut("{id}")]
+        [Authorize]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Skill skill)
         {
              if (id != skill.Id)

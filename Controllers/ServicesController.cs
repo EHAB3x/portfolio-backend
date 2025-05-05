@@ -8,7 +8,6 @@ namespace myapp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ServicesController : ControllerBase
     {
         private readonly DataContext _context;
@@ -18,6 +17,7 @@ namespace myapp.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
@@ -25,6 +25,7 @@ namespace myapp.Controllers
             return Ok(services);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -36,6 +37,7 @@ namespace myapp.Controllers
             return Ok(service);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public IActionResult Put(int id, Service updatedService)
         {
@@ -55,6 +57,7 @@ namespace myapp.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -68,6 +71,7 @@ namespace myapp.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Post(Service newService)
         {

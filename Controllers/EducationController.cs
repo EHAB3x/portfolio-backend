@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using myapp.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace myapp.Controllers
@@ -25,6 +26,7 @@ namespace myapp.Controllers
             return await _context.Educations.ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Education>> GetById(int id)
         {
@@ -50,6 +52,7 @@ namespace myapp.Controllers
             return CreatedAtAction(nameof(GetById), new { id = newEducation.Id }, newEducation);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] Education updatedEducation)
         {
@@ -62,6 +65,7 @@ namespace myapp.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

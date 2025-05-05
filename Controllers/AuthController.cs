@@ -35,7 +35,7 @@ namespace myapp.Controllers
             }            
             else
             {
-                return Unauthorized(new { message = "Wrong admin data" });
+                return Unauthorized(new { message = "Please enter a vaild username or password" });
             }
         }
     }
