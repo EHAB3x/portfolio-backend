@@ -40,14 +40,14 @@ namespace myapp.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("Admins")]
         public async Task<ActionResult<IEnumerable<Admin>>> GetAllAdmins()
         {
             return await _context.Admins.ToListAsync();
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<Admin>> AddAdmin([FromBody] Admin admin)
