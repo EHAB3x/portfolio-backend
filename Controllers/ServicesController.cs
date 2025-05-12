@@ -39,20 +39,23 @@ namespace myapp.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Service updatedService)
+        public async Task<IActionResult> Put(int id, Service service)
         {
-            if (updatedService == null || id != updatedService.Id)
+            if (id != service.Id)
             {
-                return BadRequest("Service data is invalid.");
+                return BadRequest();
             }
 
-            if (_context.Services.Find(id) == null)
+            _context.Entry(service).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
             {
                 return NotFound();
             }
-
-            _context.Entry(updatedService).State = EntityState.Modified;
-            _context.SaveChanges();
 
             return NoContent();
         }
