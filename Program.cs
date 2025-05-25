@@ -44,9 +44,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<TokenService>();
 // Configure database connection
 builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5, // Number of retry attempts
+            maxRetryDelay: TimeSpan.FromSeconds(10), // Delay between retries
+            errorNumbersToAdd: null // Default SQL Server error codes for transient failures
+        )
+    ));
 
 
 builder.Services.AddTransient<EducationController>();

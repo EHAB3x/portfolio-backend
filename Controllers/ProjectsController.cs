@@ -23,14 +23,15 @@ namespace myapp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> Get()
         {
-            return _context.Projects.ToList();
+            var projects = _context.Projects.ToList();
+            return Ok(projects);
         }
 
         [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Project> GetById(int id)
         {
-            var project = _context.Projects.FirstOrDefault(p => p.Id == id);
+            var project = _context.Projects.Find(id);
             if (project == null)
             {
                 return NotFound();
@@ -42,7 +43,10 @@ namespace myapp.Controllers
         [HttpPost]
         public ActionResult<Project> Post([FromBody] Project newProject)
         {
-            if (newProject == null) { return BadRequest("Project data is required."); }
+            if (newProject == null) 
+            { 
+                return BadRequest("Project data is required."); 
+            }
             _context.Projects.Add(newProject);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetById), new { id = newProject.Id }, newProject);
