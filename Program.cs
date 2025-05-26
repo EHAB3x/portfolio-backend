@@ -13,9 +13,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularClient", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins( )
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -71,15 +72,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ? Swagger (only for dev)
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty;
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    c.RoutePrefix = string.Empty;
+});
 
 app.MapControllers();
 
