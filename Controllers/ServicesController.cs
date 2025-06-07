@@ -17,7 +17,6 @@ namespace myapp.Controllers
             _context = context;
         }
 
-        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
@@ -25,7 +24,6 @@ namespace myapp.Controllers
             return Ok(services);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {

@@ -19,14 +19,12 @@ namespace myapp.Controllers
             _context = context;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<Experience>>> Get()
         {
             return await _context.Experiences.ToListAsync();
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Experience>> GetById(int id)
         {

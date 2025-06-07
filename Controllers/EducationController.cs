@@ -19,14 +19,12 @@ namespace myapp.Controllers
             _context = context;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Education>>> Get()
         {
             return await _context.Educations.ToListAsync();
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Education>> GetById(int id)
         {
@@ -37,7 +35,8 @@ namespace myapp.Controllers
             }
             return Ok(education);
         }
-        
+
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Education>> Post([FromBody] Education newEducation)
         {

@@ -19,7 +19,6 @@ namespace myapp.Controllers
             _context = context;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> Get()
         {
@@ -27,7 +26,6 @@ namespace myapp.Controllers
             return Ok(projects);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Project> GetById(int id)
         {

@@ -19,14 +19,12 @@ namespace myapp.Controllers
             _context = context;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Skill>>> Get()
         {
             return await _context.Skills.ToListAsync();
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Skill>> GetById(int id)
         {
